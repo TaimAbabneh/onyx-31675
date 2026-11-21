@@ -1,2 +1,19 @@
-# onyx-31675
-ONYX Robotics · FIRST Tech Challenge Team 31675 · Cedar Park, Texas. Team website and engineering projects.
+# ONYX Robotics · FTC Team 31675
+
+[Visit the team website](https://taimababneh.github.io/onyx-31675/)
+
+Team 31675 is based in Cedar Park, Texas. This site covers the team's engineering projects, FIRST Tech Challenge seasons, and ICBC Robotics fundraiser.
+
+## Editing the site
+
+The six HTML pages, shared stylesheet, script and images are in the repository root. GitHub Pages publishes from the root of the `main` branch. There is no build step.
+
+- `index.html` is the landing page.
+- `team.html` covers the team, jersey and rookie season.
+- `engineering.html` contains the pollen intake component explorer.
+- `season.html` contains the dated league schedule and FIRST links.
+- `support.html` links to the ICBC Robotics fundraiser on Zeffy.
+- `contact.html` contains the team email and email actions.
+
+The metallic emblem and jersey are illustrative renderings of the team’s supplied design. The intake illustration depicts a student design proposal.
+
