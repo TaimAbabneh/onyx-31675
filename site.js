@@ -18,20 +18,7 @@ document.addEventListener("keydown", event => {
     menu.focus();
   }
 });
-window.matchMedia("(min-width: 721px)").addEventListener("change", () => setMenu(false));
-
-const mechanism = document.querySelector(".mechanism");
-if (mechanism) {
-  const panels = [...document.querySelectorAll("details[data-part]")];
-  panels.forEach(panel => {
-    panel.querySelector("summary").addEventListener("click", event => {
-      event.preventDefault();
-      const open = !panel.open;
-      panels.forEach(other => { other.open = open && other === panel; });
-      mechanism.dataset.selected = open ? panel.dataset.part : "";
-    });
-  });
-}
+window.matchMedia("(min-width: 761px)").addEventListener("change", () => setMenu(false));
 
 const copyButton = document.querySelector(".copy-email");
 if (copyButton && navigator.clipboard && navigator.clipboard.writeText) {

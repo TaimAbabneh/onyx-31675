@@ -10,10 +10,10 @@ The six HTML pages, shared stylesheet, script and images are in the repository r
 
 - `index.html` is the landing page.
 - `team.html` covers the team, jersey and rookie season.
-- `engineering.html` contains the pollen intake component explorer.
+- `engineering.html` explains the student intake design and the proposed bench test.
 - `season.html` contains the dated league schedule and FIRST links.
 - `support.html` links to the ICBC Robotics fundraiser on Zeffy.
 - `contact.html` contains the team email and email actions.
 
-The metallic emblem and jersey are illustrative renderings of the team’s supplied design. The intake illustration depicts a student design proposal.
+The homepage shows the jersey design supplied by the team.
 
