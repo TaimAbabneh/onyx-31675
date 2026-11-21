@@ -3,37 +3,151 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#172029">
+  <meta name="theme-color" content="#111b24">
   <title>ONYX Robotics | FTC Team 31675</title>
-  <meta name="description" content="Meet the robotics team from the Islamic Center of Brushy Creek in Cedar Park, Texas.">
+  <meta name="description" content="Meet ONYX Robotics, FTC Team 31675 in Cedar Park, Texas. Browse practice photos, the BIOBUZZ schedule and team contacts.">
   <meta property="og:title" content="ONYX Robotics | FTC Team 31675">
-  <meta property="og:description" content="Meet the robotics team from the Islamic Center of Brushy Creek in Cedar Park, Texas.">
-  <meta property="og:type" content="website">
+  <meta property="og:description" content="Practice photos, meet dates and the student robot design from Cedar Park, Texas.">
   <link rel="icon" href="onyx-kit-mark.png">
-  <link rel="stylesheet" href="site.css?v=club1">
-  
+  <link rel="stylesheet" href="site.css?v=scroll1">
+  <script defer src="site.js?v=scroll1"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="wrap nav-bar">
-  <a class="brand" href="index.html" aria-label="ONYX home"><img src="onyx-kit-mark.png" alt="" width="34" height="34">ONYX</a>
-  <nav aria-label="Main navigation">
-      <a href="team.html#team-photos">Team</a>
-      <a href="season.html">Season</a>
-      <a href="contact.html">Contact</a>
-  </nav>
-  <a class="header-donate" href="https://www.zeffy.com/en-US/donation-form/donate-to-icbc-robotica">Donate</a>
-</div></header>
-<main id="main" class="wrap">
-<section class="home">
-  <div class="home-intro">
-    <p class="eyebrow">FIRST Tech Challenge · Team 31675</p>
-    <h1>ONYX <span>Robotics</span></h1>
-    <p class="lede">We build and compete together at the Islamic Center of Brushy Creek in Cedar Park, Texas.</p>
-    <div class="actions"><a class="button" href="team.html#team-photos">Meet the team</a><a class="text-link" href="season.html#schedule">Match schedule</a></div>
+<header class="masthead">
+  <div class="container header-inner">
+    <a class="brand" href="#home" aria-label="ONYX Robotics home"><img src="onyx-kit-mark.png" width="36" height="36" alt="">ONYX</a>
+    <nav aria-label="Main navigation">
+      <a href="#home" aria-current="location">Home</a><a href="#team-photos">Team</a><a href="#season">Season</a>
+    </nav>
+    <a class="donate" href="https://www.zeffy.com/en-US/donation-form/donate-to-icbc-robotica">Donate</a>
   </div>
-  <img class="kit" src="onyx-team-kit.webp" width="1165" height="913" alt="Front and back of the black ONYX 31675 team shirt, with its blue emblem and sponsor logos." fetchpriority="high">
-</section>
+</header>
+<main id="main">
+  <section id="home" class="home-sequence" aria-labelledby="home-title">
+    <div class="home-pin">
+    <div class="container hero">
+      <div class="hero-copy">
+        <p class="kicker">FIRST Tech Challenge <span aria-hidden="true">/</span> Team 31675</p>
+        <h1 id="home-title">ONYX <span>Robotics</span></h1>
+        <p class="intro">We’re the FIRST Tech Challenge team at the Islamic Center of Brushy Creek in Cedar Park, Texas. We design, build and drive our own competition robot.</p>
+        <div class="actions"><a class="primary" href="#team-photos">Meet the team <span aria-hidden="true">↓</span></a><a class="text-link" href="#schedule">Match schedule</a></div>
+      </div>
+      <figure class="home-story">
+        <div class="story-frames">
+          <img class="jersey" src="onyx-team-kit.webp" width="1165" height="913" alt="The front and back of the ONYX team jersey." data-caption="The ONYX team jersey" fetchpriority="high">
+          <img src="practice-25.jpg" width="490" height="335" alt="Two teammates test a motor beside the robot." data-caption="At the workbench · Testing a motor with code" aria-hidden="true">
+          <img src="practice-01.jpg" width="463" height="340" alt="The team watches its robot on the practice field." data-caption="On the field · Checking how the robot drives" aria-hidden="true">
+        </div>
+        <figcaption><span id="story-caption">The ONYX team jersey</span><span class="story-progress" aria-hidden="true"><i class="active"></i><i></i><i></i></span></figcaption>
+      </figure>
+      <div class="ftc-story" aria-label="Inside FIRST Tech Challenge">
+        <div><h2>Build and code</h2><p>Our intake starts with a ramp and two flexible wheels. At practice we test the motor and adjust how it pulls a ball into the robot.</p></div>
+        <div><h2>Test and drive</h2><p>On the practice field we can run the robot’s code, take the controls and try the same move again before a match.</p></div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <section id="team-photos" class="photos" aria-labelledby="gallery-heading">
+    <div class="container gallery" role="region" aria-label="Practice photo gallery" tabindex="0">
+      <div class="gallery-copy">
+        <h2 id="gallery-heading">Team photos</h2>
+        <div class="current-photo" aria-live="polite" aria-atomic="true">
+          <p class="position">Photo <span id="photo-position">1</span> of 24</p>
+          <p id="photo-caption">Four teammates work together on the chassis at floor level.</p>
+        </div>
+      </div>
+      <div class="photo-stage">
+        <button class="arrow previous" type="button" aria-label="Previous photo" aria-controls="team-photos-track" hidden>←</button>
+        <div class="paper">
+          <ul id="team-photos-track" class="slides" aria-label="Practice photos" tabindex="0">
+                <li><img src="practice-27.jpg" width="482" height="340" alt="Four teammates work together on the chassis at floor level." loading="lazy" decoding="async"></li>
+                <li><img src="practice-01.jpg" width="463" height="340" alt="The team watches its robot on the practice field." loading="lazy" decoding="async"></li>
+                <li><img src="practice-26.jpg" width="353" height="451" alt="A teammate fits a part to a black metal mechanism at the workbench." loading="lazy" decoding="async"></li>
+                <li><img src="practice-21.jpg" width="488" height="341" alt="Two teammates sit beside the robot under the red and blue baskets." loading="lazy" decoding="async"></li>
+                <li><img src="practice-25.jpg" width="490" height="335" alt="Two teammates test a motor with a laptop beside the robot." loading="lazy" decoding="async"></li>
+                <li><img src="practice-02.jpg" width="448" height="335" alt="A teammate pauses at a laptop while the group talks." loading="lazy" decoding="async"></li>
+                <li><img src="practice-18.jpg" width="447" height="332" alt="A mentor holds a mechanism beside the student at the laptop." loading="lazy" decoding="async"></li>
+                <li><img src="practice-24.jpg" width="489" height="340" alt="A teammate kneels over the chassis holding a wired mechanism." loading="lazy" decoding="async"></li>
+                <li><img src="practice-08.jpg" width="482" height="341" alt="A standing teammate holds a yellow part while another works on a laptop." loading="lazy" decoding="async"></li>
+                <li><img src="practice-20.jpg" width="447" height="338" alt="A teammate points across the field beside an open laptop." loading="lazy" decoding="async"></li>
+                <li><img src="practice-07.jpg" width="482" height="339" alt="The robot sits in the middle of the workshop circle." loading="lazy" decoding="async"></li>
+                <li><img src="practice-19.jpg" width="481" height="341" alt="Four teammates sit on the practice field near a scoring target." loading="lazy" decoding="async"></li>
+                <li><img src="practice-17.jpg" width="480" height="340" alt="Two people sit at the field wall with a laptop and game pieces." loading="lazy" decoding="async"></li>
+                <li><img src="practice-05.jpg" width="452" height="340" alt="A teammate leans over the robot while two laptops are open." loading="lazy" decoding="async"></li>
+                <li><img src="practice-22.jpg" width="488" height="341" alt="A student gestures toward the robot while talking to a teammate." loading="lazy" decoding="async"></li>
+                <li><img src="practice-03.jpg" width="477" height="341" alt="A student types on a laptop in the workshop circle." loading="lazy" decoding="async"></li>
+                <li><img src="practice-16.jpg" width="481" height="311" alt="A mentor holds a yellow game piece next to the robot." loading="lazy" decoding="async"></li>
+                <li><img src="practice-23.jpg" width="447" height="258" alt="The group leans in to look at the chassis on the field." loading="lazy" decoding="async"></li>
+                <li><img src="practice-06.jpg" width="479" height="305" alt="Students gather around the robot between workbenches." loading="lazy" decoding="async"></li>
+                <li><img src="practice-11.jpg" width="480" height="340" alt="A teammate holds up a yellow game piece." loading="lazy" decoding="async"></li>
+                <li><img src="practice-09.jpg" width="482" height="292" alt="Two teammates pass a part across the circle." loading="lazy" decoding="async"></li>
+                <li><img src="practice-15.jpg" width="484" height="335" alt="The team gathers around the chassis and a roll of tape." loading="lazy" decoding="async"></li>
+                <li><img src="practice-04.jpg" width="481" height="340" alt="The team sits together between the workshop benches." loading="lazy" decoding="async"></li>
+                <li><img src="practice-12.jpg" width="445" height="324" alt="The group looks toward a laptop beside the robot." loading="lazy" decoding="async"></li>
+          </ul>
+        </div>
+        <button class="arrow next" type="button" aria-label="Next photo" aria-controls="team-photos-track" hidden>→</button>
+      </div>
+      <div class="thumbs" aria-label="Choose a practice photo" role="group" hidden></div>
+    </div>
+  </section>
+  <section id="season" aria-labelledby="season-title">
+    <div class="container season-inner">
+      <header class="section-heading"><p class="kicker">2026–27 season</p><h2 id="season-title">BIOBUZZ</h2></header>
+      <div class="season-grid">
+        <div id="schedule"><h3>Match schedule</h3>
+          <p class="sub">Central Austin Robotics League</p>
+          <ul class="events">
+            <li><a href="https://ftc-events.firstinspires.org/2026/USTXCECAM1">
+              <time datetime="2026-11-22"><b>22</b><span>Nov 2026</span></time>
+              <span class="event-copy"><strong>CARL League Meet 1</strong><span>Austin STEM Center · Austin, TX</span></span>
+              <span class="event-arrow" aria-hidden="true">↗</span>
+            </a></li>
+            <li><a href="https://ftc-events.firstinspires.org/2026/USTXCECAM2">
+              <time datetime="2026-12-12"><b>12</b><span>Dec 2026</span></time>
+              <span class="event-copy"><strong>CARL League Meet 2</strong><span>Vista Ridge High School · Cedar Park, TX</span></span>
+              <span class="event-arrow" aria-hidden="true">↗</span>
+            </a></li>
+            <li><a href="https://ftc-events.firstinspires.org/2026/USTXCECAM3">
+              <time datetime="2027-01-09"><b>09</b><span>Jan 2027</span></time>
+              <span class="event-copy"><strong>CARL League Meet 3</strong><span>Austin, TX</span></span>
+              <span class="event-arrow" aria-hidden="true">↗</span>
+            </a></li>
+            <li><a href="https://ftc-events.firstinspires.org/2026/USTXCECALT1">
+              <time datetime="2027-01-30"><b>30</b><span>Jan 2027</span></time>
+              <span class="event-copy"><strong>CARL League Tournament</strong><span>Austin, TX</span></span>
+              <span class="event-arrow" aria-hidden="true">↗</span>
+            </a></li>
+          </ul>
+          <a class="text-link" href="https://ftc-events.firstinspires.org/2026/team/31675">Team results on FIRST ↗</a>
+        </div>
+        <div class="season-notes">
+          <h3>The game</h3>
+          <p>Robots collect pollen and nectar to score in the hive and flowers. Each match opens with 30 seconds of autonomous play, followed by two minutes of driver control.</p>
+          <a class="text-link" href="https://ftc-resources.firstinspires.org/ftc/game">Official game manual ↗</a>
+          <details id="intake"><summary>Pollen intake design</summary><p>Our student-designed Onshape intake fits inside an 18-inch cube. A ramp guides each ball to two flex wheels, which draw it over a lip into the bin. The lip keeps the ball from rolling out.</p></details>
+          <details id="rookie-season"><summary>Rookie season results <small>2025–26</small></summary>
+            <p>We competed in DECODE as ICBC-Qur’antum Mechanics.</p>
+            <dl class="details">
+      <div><dt>Sustain Award</dt><dd>Central X-Stream League Tournament · January 2026</dd></div>
+      <div><dt>Compass Award</dt><dd>Central Texas Regional Championship · March 2026</dd></div>
+      <div><dt>3rd of 24 teams</dt><dd>Aero Division qualifications at the regional championship · March 2026</dd></div>
+    </dl>
+            <a class="text-link" href="https://ftc-events.firstinspires.org/2025/team/31675">Rookie results on FIRST ↗</a>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
+<footer id="contact">
+  <div class="container footer-row">
+    <div><h2>About ONYX</h2><p>FTC Team 31675 · Islamic Center of Brushy Creek<br>Cedar Park, Texas</p></div>
+    <div><h2>Contact us</h2><a href="mailto:Taim.ababneh@hotmail.com">Taim.ababneh@hotmail.com</a></div>
+    <div id="support"><h2>Team support</h2><a href="https://www.zeffy.com/en-US/donation-form/donate-to-icbc-robotica">Fund robot parts ↗</a></div>
+  </div>
+  <div class="container footer-base"><small>© 2026 ONYX Robotics</small><a href="mailto:Taim.ababneh@hotmail.com?subject=ONYX%20photo%20and%20website%20licensing">Licensing &amp; photo permissions</a><a href="#home">Back to top ↑</a></div>
+</footer>
 </body>
 </html>

@@ -2,4 +2,4 @@
 
 [Team website](https://taimababneh.github.io/onyx-31675/)
 
-The six HTML pages share `site.css` and `site.js`. GitHub Pages publishes from the root of `main`. There is no build step.
+The scrolling homepage contains Home, Team photos, Season and the contact footer. The previous page URLs redirect to those sections. GitHub Pages serves the root of `main` without a build step.
