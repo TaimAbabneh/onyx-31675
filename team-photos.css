@@ -1,23 +1,17 @@
-.album {padding-block:clamp(20px,3vw,38px);scroll-margin-top:12px}
-.album-head,.album-tools,.album-buttons,.viewer-bar,.viewer-buttons {display:flex;align-items:center;gap:12px}
-.album-head,.viewer-bar {justify-content:space-between}
-.album-head {flex-wrap:wrap;margin-bottom:16px}
-.album-head h1,.album-head h2 {font:800 clamp(26px,4vw,48px)/1.08 var(--display);letter-spacing:-.045em}
-.album-tools {flex-wrap:wrap;font-size:.92rem}
-.album button,.viewer-buttons button {border:1px solid var(--line);background:white;border-radius:50%;width:38px;height:38px;line-height:1;color:var(--ink)}
-.album button:disabled {opacity:.35}
-.album-track {display:flex;gap:12px;overflow-x:auto;padding:2px 0 10px;list-style:none;scroll-snap-type:x mandatory}
-.album-track li {flex:none;scroll-snap-align:start}
-.photo-track li {width:min(76vw,360px);border-radius:10px;overflow:hidden}
-.photo-track a {display:block;background:#ecece6;height:100%}
-.photo-track img {width:100%;height:clamp(186px,20vw,248px);object-fit:contain}
-.thought {position:relative;isolation:isolate;overflow:hidden;width:min(78vw,375px);height:260px;background:#ebe7df;border-radius:12px}
-.thought-screw {background:#e6ebe5}
-.thought-code {background:#e6e8ef}
-.thought img {position:absolute;bottom:0;right:4%;height:67%;width:68%;object-fit:contain;object-position:bottom right}
-.thought p {position:relative;z-index:1;margin:14px 14px 0;padding:12px 16px;width:fit-content;max-width:85%;font-weight:700;line-height:1.25;background:white;border-radius:20px}
-.thought p::after,.thought p::before {content:"";position:absolute;right:20%;bottom:-12px;background:white;width:12px;height:12px;border-radius:50%}
-.thought p::before {right:17%;bottom:-20px;width:6px;height:6px}
-#photo-viewer {width:min(94vw,900px);border:0;border-radius:12px;padding:14px;background:var(--paper)}
-#photo-viewer::backdrop {background:#111c}
-.viewer-image img {margin:12px auto 0;max-height:70vh;object-fit:contain}
+.album {padding-block:clamp(22px,4vw,48px);scroll-margin-top:12px}
+.album h1 {font:800 clamp(30px,4vw,52px)/1.08 var(--display);letter-spacing:-.05em}
+.deck {max-width:670px;margin:26px auto 12px;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:clamp(6px,2vw,20px);align-items:center}
+.stack {grid-column:2;position:relative;isolation:isolate;min-width:0}
+.stack::before,.stack::after {content:"";position:absolute;inset:1px;background:#faf9f4;border:1px solid #d5d3cc;border-radius:4px;z-index:-1;transform:rotate(-2deg)}
+.stack::after {transform:rotate(1.5deg);z-index:-2}
+.photo-track {list-style:none;display:flex;overflow:auto;scroll-snap-type:x mandatory;padding:0}
+.photo-track > li {background:#fff;border:1px solid #d5d3cc;border-radius:4px;flex:0 0 100%;padding:clamp(8px,2vw,16px);scroll-snap-align:center;box-shadow:0 5px 15px #25221d12}
+.deck.ready .photo-track {display:grid;overflow:visible;perspective:950px}
+.deck.ready li {grid-area:1/1;backface-visibility:hidden}
+.photo-track img {width:100%;height:clamp(170px,44vw,350px);object-fit:scale-down;background:#f4f3ee}
+.caption {display:flex;align-items:baseline;justify-content:space-between;gap:12px;min-height:3.3em;padding-top:10px;font-size:.94rem;line-height:1.37}
+.caption span {color:#65655f;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:.85em}
+.deck button {width:42px;height:42px;padding:0;border:1px solid #a5a59f;border-radius:50%;background:white;color:#191918;font-size:23px}
+.deck button:hover {background:#191918;color:white}
+.prev {grid-column:1;grid-row:1}.next {grid-column:3;grid-row:1}
+@media(max-width:540px){.deck{grid-template-columns:32px minmax(0,1fr) 32px;gap:6px}.deck button{width:32px;height:36px}.caption{font-size:.84rem;min-height:4.5em}}
