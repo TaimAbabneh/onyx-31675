@@ -8,7 +8,33 @@ const position = document.getElementById("photo-position");
 const caption = document.getElementById("photo-caption");
 const previous = gallery.querySelector(".previous");
 const next = gallery.querySelector(".next");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const photoError = document.getElementById("photo-error");
 let photoIndex = 0;
+let displayedIndex = 0;
+let readyTurn = null;
+let turning = null;
+const pendingImages = new WeakMap();
+
+// Decode before a frame becomes visible, including after a fast sequence of taps.
+function readyImage(image) {
+  if (!pendingImages.has(image)) {
+    image.loading = "eager";
+    const promise = image.decode().catch(error => {
+      pendingImages.delete(image);
+      throw error;
+    });
+    pendingImages.set(image, promise);
+  }
+  return pendingImages.get(image);
+}
+function warmNeighbors() {
+  if (navigator.connection?.saveData) return;
+  for (const step of [-1, 1]) {
+    const neighbor = slides[(displayedIndex + step + slides.length) % slides.length];
+    readyImage(neighbor.firstElementChild).catch(() => {});
+  }
+}
 
 const thumbnailButtons = slides.map((slide, index) => {
   const original = slide.querySelector("img");
@@ -19,7 +45,10 @@ const thumbnailButtons = slides.map((slide, index) => {
   const image = new Image();
   image.alt = "";
   image.loading = "lazy";
-  image.src = original.getAttribute("src");
+  image.width = 112;
+  image.height = 84;
+  image.decoding = "async";
+  image.src = "thumbs/" + original.getAttribute("src").replace(".jpg", ".webp");
   button.append(image);
   thumbs.append(button);
   slide.hidden = index !== 0;
@@ -31,27 +60,81 @@ thumbnailButtons[0].setAttribute("aria-current", "true");
 gallery.classList.add("ready");
 thumbs.hidden = previous.hidden = next.hidden = false;
 
-function showPhoto(index, direction) {
-  const target = (index + slides.length) % slides.length;
-  if (target === photoIndex) return;
-  slides[photoIndex].hidden = true;
-  slides[photoIndex].classList.remove("enter-next", "enter-prev");
+function selectThumb(index) {
   thumbnailButtons[photoIndex].removeAttribute("aria-current");
   thumbnailButtons[photoIndex].tabIndex = -1;
-  photoIndex = target;
-  const slide = slides[target];
-  slide.querySelector("img").loading = "eager";
-  slide.hidden = false;
-  slide.classList.add(direction < 0 ? "enter-prev" : "enter-next");
-  position.textContent = String(target + 1);
-  caption.textContent = slide.firstElementChild.alt;
-  const button = thumbnailButtons[target];
+  photoIndex = index;
+  const button = thumbnailButtons[index];
   button.tabIndex = 0;
   button.setAttribute("aria-current", "true");
   const delta = button.getBoundingClientRect().left - thumbs.getBoundingClientRect().left;
   if (delta < 0 || delta + button.offsetWidth > thumbs.clientWidth) {
-    thumbs.scrollLeft += delta - (thumbs.clientWidth - button.offsetWidth) / 2;
+    thumbs.scrollBy({left:delta - (thumbs.clientWidth - button.offsetWidth) / 2,
+      behavior:reducedMotion.matches ? "instant" : "smooth"});
   }
+}
+
+async function showPhoto(index, direction) {
+  const target = (index + slides.length) % slides.length;
+  selectThumb(target);
+  readyTurn = null;
+  photoError.hidden = true;
+  if (target === displayedIndex) return;
+  try {
+    await readyImage(slides[target].firstElementChild);
+  } catch {
+    if (target === photoIndex) {
+      selectThumb(displayedIndex);
+      photoError.textContent = "This photo could not load. Select it again to retry.";
+      photoError.hidden = false;
+    }
+    return;
+  }
+  if (target !== photoIndex) return;
+  readyTurn = {target, direction};
+  presentPhoto();
+}
+async function presentPhoto() {
+  if (turning || !readyTurn) return;
+  const {target, direction} = readyTurn;
+  readyTurn = null;
+  if (target === displayedIndex || target !== photoIndex) return;
+  const outgoing = slides[displayedIndex];
+  const incoming = slides[target];
+  outgoing.setAttribute("aria-hidden", "true");
+  incoming.removeAttribute("aria-hidden");
+  incoming.hidden = false;
+  incoming.classList.add("turning-in");
+  displayedIndex = target;
+  position.textContent = String(target + 1);
+  caption.textContent = incoming.firstElementChild.alt;
+  if (!reducedMotion.matches && incoming.animate) {
+    const sign = direction < 0 ? -1 : 1;
+    turning = incoming.animate([
+      {opacity:0, transform:"translateX(" + sign * 9 + "px) rotate(" + sign * .5 + "deg)"},
+      {opacity:1, transform:"none"}
+    ], {duration:240, easing:"cubic-bezier(.22,.7,.25,1)"});
+    await turning.finished.catch(() => {});
+    turning = null;
+  }
+  outgoing.hidden = true;
+  incoming.classList.remove("turning-in");
+  warmNeighbors();
+  presentPhoto();
+}
+reducedMotion.addEventListener("change", () => {
+  if (reducedMotion.matches) turning?.finish();
+});
+if ("IntersectionObserver" in window) {
+  const nearby = new IntersectionObserver(entries => {
+    if (entries.some(entry => entry.isIntersecting)) {
+      warmNeighbors();
+      nearby.disconnect();
+    }
+  }, {rootMargin:"250px"});
+  nearby.observe(gallery);
+} else {
+  warmNeighbors();
 }
 previous.addEventListener("click", () => showPhoto(photoIndex - 1, -1));
 next.addEventListener("click", () => showPhoto(photoIndex + 1, 1));
@@ -93,38 +176,59 @@ const storyCaption = document.getElementById("story-caption");
 const header = document.querySelector(".masthead");
 const navLinks = Array.from(header.querySelectorAll("nav a"));
 const destinations = navLinks.map(link => document.getElementById(link.hash.slice(1)));
-const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 home.classList.add("story-enabled");
-let activeFrame = -1;
+let wantedFrame = 0;
+let shownFrame = 0;
+let activeSection = 0;
+let sectionOffsets = [];
+let storyStart = 0;
+let storyLength = 1;
+let maxScroll = 0;
 let queued = false;
+
+function measurePage() {
+  const inset = header.offsetHeight;
+  sectionOffsets = destinations.map(section => scrollY + section.getBoundingClientRect().top - inset - 28);
+  const homeTop = scrollY + home.getBoundingClientRect().top;
+  const mobile = matchMedia("(max-width:580px)").matches;
+  const photoStart = mobile ? scrollY + home.querySelector(".story-frames").getBoundingClientRect().top - innerHeight * .65 : 0;
+  storyStart = Math.max(homeTop - inset, photoStart);
+  storyLength = Math.max(160, home.offsetHeight * .48);
+  maxScroll = document.documentElement.scrollHeight - innerHeight;
+  scheduleScroll();
+}
+async function changeFrame(index) {
+  wantedFrame = index;
+  try { await readyImage(frames[index]); } catch { return; }
+  if (wantedFrame !== index || shownFrame === index) return;
+  shownFrame = index;
+  storyCaption.textContent = frames[index].dataset.caption;
+  // Lower layers remain opaque while the incoming image fades over them.
+  frames.forEach((frame, i) => {
+    frame.classList.toggle("revealed", i <= index);
+    frame.setAttribute("aria-hidden", String(i !== index));
+    markers[i].classList.toggle("active", i === index);
+  });
+}
 function updateScroll() {
   queued = false;
-  const top = header.getBoundingClientRect().bottom;
-  const distance = Math.max(120, home.offsetHeight * .48);
-  const progress = Math.max(0, Math.min(1, (top - home.getBoundingClientRect().top) / distance));
-  const phase = Math.min(frames.length - 1, progress * (frames.length - .74));
-  const selected = Math.round(phase);
-  frames.forEach((frame, index) => {
-    const opacity = reducedMotion.matches ? Number(index === selected) : Math.max(0, 1 - Math.abs(index - phase));
-    frame.style.opacity = String(opacity);
-  });
-  if (selected !== activeFrame) {
-    activeFrame = selected;
-    storyCaption.textContent = frames[selected].dataset.caption;
-    frames.forEach((frame, index) => frame.setAttribute("aria-hidden", String(index !== selected)));
-    markers.forEach((marker, index) => marker.classList.toggle("active", index === selected));
-  }
+  const y = Math.max(0, window.scrollY);
+  const progress = (y - storyStart) / storyLength;
+  // Separate forward and reverse boundaries so tiny scroll reversals do not flicker.
+  const first = wantedFrame === 0 ? .27 : .22;
+  const second = wantedFrame < 2 ? .73 : .68;
+  const selected = progress >= second ? 2 : progress >= first ? 1 : 0;
+  if (selected !== wantedFrame) changeFrame(selected);
   let current = 0;
-  destinations.forEach((section, index) => {
-    if (section.getBoundingClientRect().top <= top + 28) current = index;
-  });
-  if (Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 1) {
-    current = destinations.length - 1;
+  for (let i = 1; i < sectionOffsets.length; i++) {
+    if (y >= sectionOffsets[i]) current = i;
   }
-  navLinks.forEach((link, index) => {
-    if (index === current) link.setAttribute("aria-current", "location");
-    else link.removeAttribute("aria-current");
-  });
+  if (maxScroll > 0 && y >= maxScroll - 1) current = destinations.length - 1;
+  if (current !== activeSection) {
+    navLinks[activeSection].removeAttribute("aria-current");
+    navLinks[current].setAttribute("aria-current", "location");
+    activeSection = current;
+  }
 }
 function scheduleScroll() {
   if (!queued) {
@@ -133,10 +237,13 @@ function scheduleScroll() {
   }
 }
 window.addEventListener("scroll", scheduleScroll, {passive:true});
-window.addEventListener("resize", scheduleScroll);
-window.addEventListener("pageshow", scheduleScroll);
-reducedMotion.addEventListener("change", scheduleScroll);
-updateScroll();
+window.addEventListener("resize", measurePage);
+window.addEventListener("pageshow", measurePage);
+if ("ResizeObserver" in window) {
+  const layout = new ResizeObserver(measurePage);
+  [header,...destinations,document.querySelector("footer")].forEach(element => layout.observe(element));
+}
+measurePage();
 
 function openLinkedDetails() {
   const target = document.getElementById(location.hash.slice(1));
@@ -156,15 +263,4 @@ if (upcoming) {
   const event = upcoming.closest("li");
   event.classList.add("upcoming");
   event.querySelector(".event-copy").append(label);
-}
-if ("IntersectionObserver" in window && !reducedMotion.matches) {
-  const reveal = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add("arrived");
-      reveal.unobserve(entry.target);
-    }
-  });
-  document.querySelectorAll(".gallery-copy,.photo-stage,.section-heading,.season-notes,.footer-row")
-    .forEach(element => reveal.observe(element));
 }
